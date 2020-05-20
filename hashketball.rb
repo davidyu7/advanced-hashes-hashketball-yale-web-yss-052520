@@ -127,3 +127,78 @@ def game_hash
 end
 
 # Write code here
+
+def get_player_attribute(player_name, attribute)
+  game_hash.each do |team, team_specs|
+    team_specs[:players].each do |player|
+      return player[attribute] if player[:player_name] == player_name
+    end
+  end
+end
+
+def num_points_scored(player_name)
+  get_player_attribute(player_name, :points)
+end
+
+def shoe_size(player_name)
+  get_player_attribute(player_name, :shoe)
+end
+
+def team_colors(team_name)
+  game_hash.each do |team, team_specs|
+    return team_specs[:colors] if team_specs[:team_name] == team_name
+  end
+end
+
+def team_names
+  output = []
+  game_hash.each do |team, team_specs|
+    output << team_specs[:team_name]
+  end
+  output
+end
+
+def player_numbers(team_name)
+  output = []
+  team = game_hash.select {|team, team_specs| team_specs[:team_name] == team_name}
+  team.values[0][:players].each do |player|
+    output << player[:number]
+  end
+  output
+end
+
+def player_stats(player_name)
+  
+=begin
+  output = {}
+  attribute_list = [:number, :shoe, :points, :rebounds, :assists, :steals, :blocks, :slam_dunks]
+  attribute_list.each do |attribute|
+    output[attribute] = get_player_attribute(player_name, attribute)
+  end
+  output
+=end
+  
+  game_hash.each do |team, team_specs|
+    team_specs[:players].each do |player|
+      return player if player[:player_name] == player_name
+    end
+  end
+  
+end
+
+def big_shoe_rebounds
+  current_max_shoe = 0
+  max_player = nil
+  game_hash.each do |team, team_specs|
+    team_specs[:players].each do |player|
+      if player[:shoe] > current_max_shoe
+        current_max_shoe = player[:shoe]
+        max_player = player[:player_name]
+      end
+    end
+  end
+  get_player_attribute(max_player, :rebounds)
+end
+
+
+

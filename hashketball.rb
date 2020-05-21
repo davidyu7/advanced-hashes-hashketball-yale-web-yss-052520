@@ -186,19 +186,59 @@ def player_stats(player_name)
   
 end
 
-def big_shoe_rebounds
-  current_max_shoe = 0
+def get_max_player(attribute)
+  current_max = 0
   max_player = nil
   game_hash.each do |team, team_specs|
     team_specs[:players].each do |player|
-      if player[:shoe] > current_max_shoe
-        current_max_shoe = player[:shoe]
+      if player[attribute] > current_max
+        current_max = player[attribute]
         max_player = player[:player_name]
       end
     end
   end
-  get_player_attribute(max_player, :rebounds)
+  max_player
 end
 
+def big_shoe_rebounds
+  get_player_attribute(get_max_player(:shoe), :rebounds)
+end
+
+def most_points_scored
+  get_max_player(:points)
+end
+
+def winning_team
+  scores = {}
+  game_hash.each do |team, team_specs|
+    team_total = 0
+    team_specs[:players].each do |player|
+      team_total += player[:points]
+    end
+    scores[team] = team_total
+  end
+  game_hash[scores.key(scores.values.max)][:team_name]
+end
+
+def player_with_longest_name
+  longest_name = ""
+  game_hash.each do |team, team_specs|
+    team_specs[:players].each do |player|
+      if player[:player_name].length > longest_name.length
+        longest_name = player[:player_name]
+      end
+    end
+  end
+  longest_name
+end
+
+def long_name_steals_a_ton?
+  player_with_longest_name == get_max_player(:steals)
+end
+    
+puts most_points_scored
+puts winning_team
+puts player_with_longest_name
+puts long_name_steals_a_ton?
 
 
